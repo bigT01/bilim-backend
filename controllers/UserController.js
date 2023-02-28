@@ -14,7 +14,8 @@ class UserController {
     res.json(newPerson.rows[0])
   }
   async getUsers(req, res) {
-
+    const Users = await db.query('select id, full_name, attend, avatar_url from student')
+    res.json(Users.rows)
   }
   async getOneUser(req, res) {
 
@@ -23,7 +24,23 @@ class UserController {
 
   }
   async deleteUser(req, res) {
-
+    try{
+      const id = (req.params.id)
+      await db.query('delete from student where id = $1', [id])
+      res.status(201).json({
+        message:"успешно удално"
+      })
+    } catch (err){
+      if(err.code === '23503'){
+        res.status(503).json({
+          message: "этот ученик состоит в курсе"
+        })
+      } else {
+        res.status(500).json({
+          message: "ошибка сервера"
+        })
+      }
+    }
   }
 }
 

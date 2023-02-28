@@ -9,3 +9,25 @@ create TABLE student
     avatar_url varchar(255),
     created_at timestamp DEFAULT Now()
 );
+
+CREATE TABLE course (
+    id varchar(255) PRIMARY KEY,
+    name varchar(255),
+    description varchar(255)
+);
+
+CREATE TABLE student_courses (
+    student_id varchar(255) REFERENCES student(id),
+    course_id varchar(255) REFERENCES course(id),
+    PRIMARY KEY (student_id, course_id)
+);
+
+CREATE TABLE lessons
+(
+    lesson_id   varchar(255) PRIMARY KEY,
+    course_id   varchar(255) REFERENCES course(id),
+    title       varchar(255),
+    description varchar(255),
+    start_time  TIMESTAMP default Now(),
+    end_time    TIMESTAMP NOT NULL
+);
