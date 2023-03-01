@@ -14,11 +14,20 @@ class CourseController {
         res.json(newCourse.rows[0])
     }
     async getCourses(req, res) {
-        const data = await  db.query('SELECT course.id, course.name, COUNT(DISTINCT student_courses.student_id) AS num_students, COUNT(DISTINCT lessons.lesson_id) AS num_lessons FROM course LEFT JOIN student_courses ON course.id = student_courses.course_id LEFT JOIN lessons ON course.id = lessons.course_id GROUP BY course.name, course.id')
+        const data = await db.query('SELECT course.id, course.name, COUNT(DISTINCT student_courses.student_id) AS num_students, COUNT(DISTINCT lessons.lesson_id) AS num_lessons FROM course LEFT JOIN student_courses ON course.id = student_courses.course_id LEFT JOIN lessons ON course.id = lessons.course_id GROUP BY course.name, course.id')
         res.json(data.rows)
     }
     async getOneCourse(req, res) {
-
+        try{
+            const id = (req.params.id)
+            const data = await db.query('select lesson_id, title, preview_image from lessons where course_id = $1', [id])
+            res.json(data.rows)
+        }catch (err){
+            console.log(err)
+            res.status(500).json({
+                message: 'ошибка сервера'
+            })
+        }
     }
     async updateCourse(req, res) {
 
