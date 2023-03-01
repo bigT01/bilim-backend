@@ -40,7 +40,6 @@ class CourseController {
                     db.query('INSERT INTO student_courses (student_id, course_id) VALUES ($1, $2);', [student, id])
                 }))
                     .then(() => {
-                        console.log(true)
                         return Promise.all(StudentsToRemove.map((student) => db.query('DELETE FROM student_courses WHERE student_id = $1;', [student])))
                     })
                     .then(() => {

@@ -27,7 +27,17 @@ CREATE TABLE lessons
     lesson_id   varchar(255) PRIMARY KEY,
     course_id   varchar(255) REFERENCES course(id),
     title       varchar(255),
-    description varchar(255),
+    description text,
+    preview_image varchar(255),
+    material varchar(255),
     start_time  TIMESTAMP default Now(),
     end_time    TIMESTAMP NOT NULL
+);
+
+CREATE TABLE grades (
+    id varchar(255) PRIMARY KEY,
+    student_id varchar(255) REFERENCES student(id),
+    lesson_id varchar (255) REFERENCES lessons(lesson_id),
+    grade integer,
+    start_time  TIMESTAMP default Now()
 );
