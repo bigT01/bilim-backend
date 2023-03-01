@@ -14,7 +14,7 @@ class CourseController {
         res.json(newCourse.rows[0])
     }
     async getCourses(req, res) {
-        const data = await  db.query('SELECT course.id, course.name, COUNT(DISTINCT student_courses.student_id) AS num_students, COUNT(lessons.lesson_id) AS num_lessons FROM course LEFT JOIN student_courses ON course.id = student_courses.course_id LEFT JOIN lessons ON course.id = lessons.course_id GROUP BY course.name, course.id')
+        const data = await  db.query('SELECT course.id, course.name, COUNT(DISTINCT student_courses.student_id) AS num_students, COUNT(DISTINCT lessons.lesson_id) AS num_lessons FROM course LEFT JOIN student_courses ON course.id = student_courses.course_id LEFT JOIN lessons ON course.id = lessons.course_id GROUP BY course.name, course.id')
         res.json(data.rows)
     }
     async getOneCourse(req, res) {
@@ -24,7 +24,36 @@ class CourseController {
 
     }
     async deleteCourse(req, res) {
-
+        try{
+            const id = (req.params.id)
+            db.query('delete from lessons where course_id = $1', [id])
+                .then(() => {
+                    db.query('delete from student_courses where course_id = $1', [id])
+                        .then(() =>{
+                            return (db.query('delete from course where id = $1', [id]))
+                        })
+                        .then(() => {
+                            res.status(201).json({
+                                message:"успешно удално"
+                            })
+                        })
+                })
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).json({message: 'ошибка сервера'});
+                });
+        } catch (err){
+            if(err.code === '23503'){
+                console.log(err);
+                res.status(503).json({
+                    message: "у этого курса есть уроки"
+                })
+            } else {
+                res.status(500).json({
+                    message: "ошибка сервера"
+                })
+            }
+        }
     }
     async updateUsersCourse(req, res) {
         const id = req.params.id
