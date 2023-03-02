@@ -65,6 +65,6 @@ CREATE TABLE question
     options character(1000),
     correct_answer character(1000),
     created_at TIMESTAMP default Now(),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
