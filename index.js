@@ -7,6 +7,7 @@ import fs from 'fs';
 import multer from 'multer';
 import courseRouter from "./routes/courseRouter.js";
 import LessonRouter from "./routes/LessonRouter.js";
+import quizRouter from "./routes/quizRouter.js";
 
 const app = express();
 const port = process.env.PORT || 4444
@@ -27,7 +28,7 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json())
-app.use('/api', userRouter, courseRouter, LessonRouter)
+app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter)
 app.use('/uploads', express.static('uploads'));
 
 app.post('/upload',  upload.single('file'), (req, res) => {

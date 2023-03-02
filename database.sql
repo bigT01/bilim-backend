@@ -34,10 +34,37 @@ CREATE TABLE lessons
     end_time    TIMESTAMP NOT NULL
 );
 
-CREATE TABLE grades (
-    id varchar(255) PRIMARY KEY,
-    student_id varchar(255) REFERENCES student(id),
-    lesson_id varchar (255) REFERENCES lessons(lesson_id),
-    grade integer,
-    start_time  TIMESTAMP default Now()
+-- CREATE TABLE grades (
+--     id varchar(255) PRIMARY KEY,
+--     student_id varchar(255) REFERENCES student(id),
+--     lesson_id varchar (255) REFERENCES lessons(lesson_id),
+--     grade integer,
+--     start_time  TIMESTAMP default Now()
+-- );
+
+CREATE TABLE quiz
+(
+    quiz_id   varchar(255) PRIMARY KEY,
+    lesson_id   varchar(255) REFERENCES lessons(lesson_id),
+    title       varchar(255),
+    duration time,
+    total_points integer,
+    created_at TIMESTAMP default Now(),
+    updated_at TIMESTAMP,
+    is_active boolean,
+    start_time time,
+    end_time time
 );
+
+CREATE TABLE question
+(
+    question_id   varchar(255) PRIMARY KEY,
+    quiz_id varchar(255) REFERENCES quiz(quiz_id),
+    question varchar(255),
+    type character(255),
+    options character(1000),
+    correct_answer character(1000),
+    created_at TIMESTAMP default Now(),
+    updated_at TIMESTAMP,
+);
+

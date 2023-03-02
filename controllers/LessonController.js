@@ -22,7 +22,6 @@ class LessonController {
             res.status(500).json({message: 'ошибка сервера'})
         }
     }
-
 }
 
 export default new LessonController()
