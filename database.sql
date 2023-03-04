@@ -7,6 +7,7 @@ create TABLE student
     attend     varchar(10),
     token      varchar(255),
     avatar_url varchar(255),
+    role varchar(255),
     created_at timestamp DEFAULT Now()
 );
 
