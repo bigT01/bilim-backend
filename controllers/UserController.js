@@ -6,15 +6,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 class UserController {
   async createUser(req, res) {
-    const {login, full_name, password, attend} = req.body
+    const {login, role, full_name, password, attend} = req.body
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     const id = uuidv4();
-    const newPerson = await db.query('insert into student (id ,login, full_name, password, attend) values ($1, $2, $3, $4, $5) returning *', [id, login, full_name, hash, attend])
+    const newPerson = await db.query('insert into student (id ,login, full_name, password, attend, role) values ($1, $2, $3, $4, $5, $6) returning *', [id, login, full_name, hash, attend ,role])
     res.json(newPerson.rows[0])
   }
   async getUsers(req, res) {
-    const Users = await db.query('select id, full_name, attend, avatar_url from student')
+    const role = req.params.role
+    const Users = await db.query('select id, full_name, attend, avatar_url from student where role=$1', [role])
     res.json(Users.rows)
   }
   async getOneUser(req, res) {

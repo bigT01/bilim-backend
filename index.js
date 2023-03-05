@@ -9,6 +9,8 @@ import courseRouter from "./routes/courseRouter.js";
 import LessonRouter from "./routes/LessonRouter.js";
 import quizRouter from "./routes/quizRouter.js";
 import questionRouter from "./routes/questionRouter.js";
+import LoginRouter from "./routes/LoginRouter.js";
+import checkAuth from "./utils/checkAuth.js";
 
 const app = express();
 const port = process.env.PORT || 4444
@@ -29,7 +31,8 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json())
-app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter)
+app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter, LoginRouter)
+
 app.use('/uploads', express.static('uploads'));
 
 app.post('/upload',  upload.single('file'), (req, res) => {
