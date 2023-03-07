@@ -29,6 +29,30 @@ class CourseController {
             })
         }
     }
+    async getOneCourseById(req, res) {
+        try{
+            const id = (req.params.id)
+            const data = await db.query('select * from course where id = $1', [id])
+            res.json(data.rows)
+        }catch (err){
+            console.log(err)
+            res.status(500).json({
+                message: 'ошибка сервера'
+            })
+        }
+    }
+    async getOneCourse(req, res) {
+        try{
+            const id = (req.params.id)
+            const data = await db.query('select lesson_id, title, preview_image from lessons where course_id = $1', [id])
+            res.json(data.rows)
+        }catch (err){
+            console.log(err)
+            res.status(500).json({
+                message: 'ошибка сервера'
+            })
+        }
+    }
     async updateCourse(req, res) {
 
     }
@@ -96,6 +120,17 @@ class CourseController {
     async getUsersCourse(req, res) {
         const id = req.params.id
         await db.query('SELECT student_id FROM student_courses WHERE course_id = $1  ', [id])
+            .then((result) => {
+                res.json(result.rows);
+            })
+            .catch((error) => {
+                console.error(error);
+                res.status(500).json({message: 'не могли найти студенов этого курса'});
+            });
+    }
+    async getCourseNames(req, res) {
+        const id = req.params.id
+        db.query('SELECT course_id FROM student_courses WHERE student_id = $1  ', [id])
             .then((result) => {
                 res.json(result.rows);
             })
