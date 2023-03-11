@@ -9,7 +9,7 @@ router.put('/lesson/:id', LessonController.updateLesson)
 router.delete('/lesson/:id', LessonController.deleteLesson)
 
 
-
+router.get('/course/:id/lesson', LessonController.getLessonsForStudentByCourseId)
 
 
 export default router

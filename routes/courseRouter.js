@@ -11,8 +11,9 @@ router.put('/course/:id', CourseController.updateCourse)
 router.delete('/course/:id', CourseController.deleteCourse)
 
 router.get('/course/:id/user', CourseController.getUsersCourse)
-router.get('/course/user/:id', CourseController.getCourseNames)
 router.put('/course/:id/user', CourseController.updateUsersCourse)
+
+router.get('/course/student/:id', CourseController.getCoursesForCertainStudent)
 
 
 

@@ -17,6 +17,29 @@ class CourseController {
         const data = await db.query('SELECT course.id, course.name, COUNT(DISTINCT student_courses.student_id) AS num_students, COUNT(DISTINCT lessons.lesson_id) AS num_lessons FROM course LEFT JOIN student_courses ON course.id = student_courses.course_id LEFT JOIN lessons ON course.id = lessons.course_id GROUP BY course.name, course.id')
         res.json(data.rows)
     }
+
+
+    async getCoursesForCertainStudent(req, res) {
+        try{
+            const id = (req.params.id)
+            db.query('SELECT course.id, course.name, COUNT(DISTINCT lessons.lesson_id) AS num_lessons FROM course LEFT JOIN student_courses ON course.id = student_courses.course_id LEFT JOIN lessons ON course.id = lessons.course_id WHERE student_courses.student_id = $1 GROUP BY course.name, course.id ', [id])
+                .then(response => {
+                    res.json(response.rows)
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(503).json({
+                        message: 'ошибка сервера'
+                    })
+                })
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: 'ошибка сервера'
+            })
+        }
+    }
+
     async getOneCourse(req, res) {
         try{
             const id = (req.params.id)
@@ -128,17 +151,7 @@ class CourseController {
                 res.status(500).json({message: 'не могли найти студенов этого курса'});
             });
     }
-    async getCourseNames(req, res) {
-        const id = req.params.id
-        db.query('SELECT course_id FROM student_courses WHERE student_id = $1  ', [id])
-            .then((result) => {
-                res.json(result.rows);
-            })
-            .catch((error) => {
-                console.error(error);
-                res.status(500).json({message: 'не могли найти студенов этого курса'});
-            });
-    }
+
 }
 
 export default new CourseController()

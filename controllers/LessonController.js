@@ -39,6 +39,18 @@ class LessonController {
             res.status(500).json({message: 'ошибка сервера'})
         }
     }
+    async getLessonsForStudentByCourseId(req, res) {
+        try{
+            const course_id = (req.params.id)
+            const data = await db.query('select lesson_id, title, preview_image, start_time, end_time from lessons where course_id = $1', [course_id])
+            res.json(data.rows)
+        }catch (err){
+            console.log(err)
+            res.status(500).json({
+                message: 'ошибка сервера'
+            })
+        }
+    }
     async updateLesson(req, res) {
         try{
             const lesson_id = req.params.id

@@ -10,6 +10,7 @@ import LessonRouter from "./routes/LessonRouter.js";
 import quizRouter from "./routes/quizRouter.js";
 import questionRouter from "./routes/questionRouter.js";
 import LoginRouter from "./routes/LoginRouter.js";
+import QuestionRouterForStudent from "./routes/QuestionRouterForStudent.js";
 import checkAuth from "./utils/checkAuth.js";
 
 const app = express();
@@ -31,7 +32,7 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json())
-app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter, LoginRouter)
+app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter, LoginRouter, QuestionRouterForStudent)
 
 app.use('/uploads', express.static('uploads'));
 

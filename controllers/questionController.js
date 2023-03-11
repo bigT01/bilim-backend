@@ -25,11 +25,11 @@ class QuestionController {
     async updateQuestion(req, res) {
         try{
             const question_id = req.params.id;
-            const {question, type, options, correct_answer} = req.body
+            const {question, type, options, correct_answer, photo} = req.body
             const now = new Date();
             const time = now.toISOString();
 
-            db.query('update question set question = $1, type = $2, options = $3, correct_answer=$4, updated_at=$5 where question_id=$6', [question, type, options, correct_answer, time, question_id])
+            db.query('update question set question = $1, type = $2, options = $3, correct_answer=$4, updated_at=$5, photo=$6 where question_id=$7', [question, type, options, correct_answer, time, photo, question_id])
                 .then(response => {
                     res.status(200).json({message:'вопрос было успешно обновлено'})
                 })
