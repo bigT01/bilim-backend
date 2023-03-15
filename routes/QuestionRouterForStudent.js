@@ -5,6 +5,8 @@ const router = new Router()
 
 router.get('/quiz/:id/question/', QuestionControllerForStudent.getQuestionsIdByQuizId)
 router.get('/questionStudent/:id', QuestionControllerForStudent.getOneQuestion)
+router.post('/user/:id/lesson/:lessonId/quiz/:quizId/question/answer', QuestionControllerForStudent.CheckQuestionsAnswer)
+
 
 
 

@@ -35,14 +35,6 @@ CREATE TABLE lessons
     end_time    TIMESTAMP NOT NULL
 );
 
--- CREATE TABLE grades (
---     id varchar(255) PRIMARY KEY,
---     student_id varchar(255) REFERENCES student(id),
---     lesson_id varchar (255) REFERENCES lessons(lesson_id),
---     grade integer,
---     start_time  TIMESTAMP default Now()
--- );
-
 CREATE TABLE quiz
 (
     quiz_id   varchar(255) PRIMARY KEY,
@@ -67,5 +59,20 @@ CREATE TABLE question
     correct_answer character(1000),
     created_at TIMESTAMP default Now(),
     updated_at TIMESTAMP
+);
+
+CREATE TABLE grades (
+    id varchar(255) PRIMARY KEY,
+    student_id varchar(255) REFERENCES student(id),
+    lesson_id varchar(255) REFERENCES lessons(lesson_id),
+    grade integer
+);
+
+CREATE TABLE message_con (
+    id varchar(255) PRIMARY KEY,
+    sender varchar(255) REFERENCES student(id),
+    receives varchar(255) REFERENCES student(id),
+    created_at TIMESTAMP default Now(),
+    message_content text
 );
 

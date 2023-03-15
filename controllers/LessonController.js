@@ -74,29 +74,36 @@ class LessonController {
             db.query('select * from quiz where lesson_id = $1', [lesson_id])
                 .then(response => {
                     const quiz_id = (response.rows[0]?.quiz_id)
-                    db.query('delete from question where quiz_id = $1', [quiz_id])
+                    db.query('delete from grades where lesson_id = $1', [lesson_id])
                         .then(() => {
-                            db.query('delete from quiz where quiz_id = $1', [quiz_id])
+                            db.query('delete from question where quiz_id = $1', [quiz_id])
                                 .then(() => {
-                                    db.query('delete from lessons where lesson_id = $1', [lesson_id])
-                                        .then(() =>{
-                                            res.json({message:'успешно удалено'})
+                                    db.query('delete from quiz where quiz_id = $1', [quiz_id])
+                                        .then(() => {
+                                            db.query('delete from lessons where lesson_id = $1', [lesson_id])
+                                                .then(() =>{
+                                                    res.json({message:'успешно удалено'})
+                                                })
+                                                .catch(err => {
+                                                    console.log(err)
+                                                    res.status(500).json({message: 'ошибка урока'})
+                                                })
                                         })
                                         .catch(err => {
                                             console.log(err)
-                                            res.status(500).json({message: 'ошибка урока'})
+                                            res.json({
+                                                message: 'ошибка квиза'
+                                            })
                                         })
                                 })
                                 .catch(err => {
                                     console.log(err)
-                                    res.json({
-                                        message: 'ошибка квиза'
-                                    })
+                                    res.status(500).json({message: 'ошибка вопроса'})
                                 })
                         })
-                        .catch(err => {
+                        .catch(() => {
                             console.log(err)
-                            res.status(500).json({message: 'ошибка вопроса'})
+                            res.status(503).json({message: 'ошибка урока'})
                         })
                 })
                 .catch(err =>{
