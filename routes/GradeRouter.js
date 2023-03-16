@@ -1,5 +1,5 @@
 import {Router} from "express";
-import GradeController from "../controllers/GradeController.js";
+import GradeController from "../controllers/gradeController.js";
 
 const router = new Router()
 
