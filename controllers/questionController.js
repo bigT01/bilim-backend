@@ -29,7 +29,7 @@ class QuestionController {
             const now = new Date();
             const time = now.toISOString();
 
-            db.query('update question set question = $1, type = $2, options = $3, correct_answer=$4, updated_at=$5, photo=$6 where question_id=$7', [question, type, options, correct_answer, time, photo, question_id])
+            db.query('update question set question = $1, type = $2, options = $3, correct_answer=$4, updated_at=$5, photo=$6 where question_id=$7', [question.trim(), type.trim(), options.trim(), correct_answer.trim(), time, photo, question_id])
                 .then(response => {
                     res.status(200).json({message:'вопрос было успешно обновлено'})
                 })

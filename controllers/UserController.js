@@ -6,12 +6,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 class UserController {
   async createUser(req, res) {
-    const {login, role, full_name, password, attend} = req.body
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    const id = uuidv4();
-    const newPerson = await db.query('insert into student (id ,login, full_name, password, attend, role) values ($1, $2, $3, $4, $5, $6) returning *', [id, login, full_name, hash, attend ,role])
-    res.json(newPerson.rows[0])
+      try{
+          const {login, role, full_name, password, attend} = req.body
+          const salt = await bcrypt.genSalt(10);
+          const hash = await bcrypt.hash(password, salt);
+          const id = uuidv4();
+          const newPerson = await db.query('insert into student (id ,login, full_name, password, attend, role) values ($1, $2, $3, $4, $5, $6) returning *', [id, login, full_name, hash, attend ,role])
+          res.json(newPerson.rows[0])
+      } catch (err){
+          console.log(err)
+          res.status(500).json({message:'ошибка сети'})
+      }
+
   }
   async getUsers(req, res) {
     const role = req.params.role
@@ -77,9 +83,57 @@ class UserController {
     }
 
   }
-  async updateUser(req, res) {
 
+  async getUserByClasses(req, res) {
+      try{
+
+        db.query('SELECT s.attend, ROUND(AVG(g.grade)::numeric, 0) as average_grade FROM student s JOIN grades g ON s.id = g.student_id GROUP BY s.attend')
+            .then(response => {
+                res.status(200).json(response.rows)
+            })
+            .catch(err =>{
+                console.log(err)
+                res.status(503).json({
+                    message: "этот ученик состоит в курсе"
+                })
+            })
+      } catch (err){
+          console.log(err)
+          res.status(503).json({
+              message: "этот ученик состоит в курсе"
+          })
+      }
   }
+
+  async getUserByAttendOtherUser(req, res) {
+        try {
+            const {id} = req.params
+            const response = await db.query('select * from student where id = $1', [id])
+            const attend = response.rows[0].attend.split('-')[0]
+            const response1 = await db.query('select id, full_name, attend from student where attend = $1', [attend])
+            res.status(200).json(response1.rows)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "ошибка сервера"
+            })
+        }
+    }
+
+    async getAverageUsersByAttend(req, res) {
+        try {
+            const {id} = req.params
+            const response = await db.query('select * from student where id = $1', [id])
+            const attend = response.rows[0].attend.split('-')[0]
+            const response1 = await db.query('SELECT ROUND(AVG(g.grade)::numeric, 0) AS avg_score FROM student s JOIN grades g ON s.id = g.student_id WHERE s.attend = $1', [attend])
+            res.status(200).json(response1.rows)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "ошибка сервера"
+            })
+        }
+    }
   async deleteUser(req, res) {
     try{
       const id = (req.params.id)

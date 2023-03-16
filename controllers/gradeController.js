@@ -49,23 +49,6 @@ class GradeController {
             res.status(500).json({message: 'ошибка сервера'})
         }
     }
-    // async getGradesUser(req, res) {
-    //     try{
-    //         const userId = req.params.id
-    //         const
-    //         db.query('select * from grades where student_id = $1', [userId])
-    //             .then(response => {
-    //                 res.status(200).json(response.rows)
-    //             })
-    //             .catch(err => {
-    //                 console.log(err)
-    //                 res.status(503).json({message: 'ошибка с база данной'})
-    //             })
-    //     }catch(err){
-    //         console.log(err)
-    //         res.status(500).json({message: 'ошибка сервера'})
-    //     }
-    // }
 }
 
 export default new GradeController()

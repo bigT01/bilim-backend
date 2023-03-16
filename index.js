@@ -35,7 +35,16 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json())
-app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter, LoginRouter, QuestionRouterForStudent, GradeRouter, messageRouter, StandardRouter)
+app.use('/api', userRouter)
+app.use('/api', courseRouter)
+app.use('/api', LessonRouter)
+app.use('/api', quizRouter)
+app.use('/api', questionRouter)
+app.use('/api', LoginRouter)
+app.use('/api', QuestionRouterForStudent)
+app.use('/api', GradeRouter)
+app.use('/api', messageRouter)
+app.use('/api', StandardRouter)
 
 app.use('/uploads', express.static('uploads'));
 

@@ -5,8 +5,10 @@ const router = new Router()
 
 router.post('/user', userController.createUser)
 router.get('/user/:role', userController.getUsers)
+router.get('/attends/:id', userController.getUserByAttendOtherUser)
+router.get('/average/:id', userController.getAverageUsersByAttend)
+router.get('/statistic/user', userController.getUserByClasses)
 router.get('/userOne/:id', userController.getOneUser)
-router.put('/user/:id', userController.updateUser)
 router.delete('/user/:id', userController.deleteUser)
 
 
