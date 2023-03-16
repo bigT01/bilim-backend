@@ -76,3 +76,10 @@ CREATE TABLE message_con (
     message_content text
 );
 
+CREATE TABLE standards
+(
+    id       varchar(255) PRIMARY KEY,
+    name     varchar(255),
+    material varchar(255)
+);
+

@@ -12,11 +12,9 @@ class MessageController {
             const {message_content} = req.body
             const id_message = uuidv4();
 
-            db.query('insert into message_con (id, sender_id, reciever_id, message_content) values ($1, $2, $3, $4)', [id_message, id, id_two, message_content])
-                .then(() => {
-                    res.status(200).json({
-                        message:'отправлено'
-                    })
+            db.query('insert into message_con (id, sender, receives, message_content) values ($1, $2, $3, $4) returning *', [id_message, id, id_two, message_content])
+                .then((response) => {
+                    res.status(200).json(response.rows[0])
                 })
                 .catch(err => {
                     console.log(err)
@@ -35,7 +33,7 @@ class MessageController {
     async getMessages(req, res) {
         try{
             const {id, id_two} = req.params
-            db.query('select * from message_con where sender = $1 and receives = $2', [id, id_two])
+            db.query('select * from message_con where (sender = $1 or sender = $2) and (receives = $2 or receives = $1)', [id, id_two])
                 .then(response => {
                     res.status(200).json(response.rows)
                 })

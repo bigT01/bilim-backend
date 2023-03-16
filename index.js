@@ -13,6 +13,8 @@ import LoginRouter from "./routes/LoginRouter.js";
 import QuestionRouterForStudent from "./routes/QuestionRouterForStudent.js";
 import checkAuth from "./utils/checkAuth.js";
 import GradeRouter from "./routes/GradeRouter.js";
+import messageRouter from "./routes/messageRouter.js";
+import StandardRouter from "./routes/StandardRouter.js";
 
 const app = express();
 const port = process.env.PORT || 4444
@@ -33,7 +35,7 @@ const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json())
-app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter, LoginRouter, QuestionRouterForStudent, GradeRouter)
+app.use('/api', userRouter, courseRouter, LessonRouter, quizRouter, questionRouter, LoginRouter, QuestionRouterForStudent, GradeRouter, messageRouter, StandardRouter)
 
 app.use('/uploads', express.static('uploads'));
 
