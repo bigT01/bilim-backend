@@ -80,31 +80,31 @@ class CourseController {
 
     }
     async deleteCourse(req, res) {
-        try{
+        try {
             const id = (req.params.id)
-            db.query('delete from lessons where course_id = $1', [id])
-                .then(() => {
-                    db.query('delete from student_courses where course_id = $1', [id])
-                        .then(() =>{
-                            return (db.query('delete from course where id = $1', [id]))
-                        })
-                        .then(() => {
-                            res.status(201).json({
-                                message:"успешно удално"
-                            })
-                        })
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).json({message: 'ошибка сервера'});
-                });
-        } catch (err){
-            if(err.code === '23503'){
+            const response = await db.query('select lesson_id from lessons where course_id = $1', [id])
+            const lessonIds = response.rows.map(row => row.lesson_id)
+
+            await Promise.all([
+                db.query('delete from question where quiz_id in (select quiz_id from quiz where lesson_id = ANY($1))', [lessonIds]),
+                db.query('delete from quiz where lesson_id = ANY($1)', [lessonIds]),
+                db.query('delete from grades where lesson_id = ANY($1)', [lessonIds]),
+                db.query('delete from lessons where course_id = $1', [id]),
+                db.query('delete from student_courses where course_id = $1', [id]),
+                db.query('delete from course where id = $1', [id]),
+            ])
+
+            res.status(201).json({
+                message: "успешно удалено"
+            })
+        } catch (err) {
+            if (err.code === '23503') {
                 console.log(err);
                 res.status(503).json({
                     message: "у этого курса есть уроки"
                 })
             } else {
+                console.error(err)
                 res.status(500).json({
                     message: "ошибка сервера"
                 })

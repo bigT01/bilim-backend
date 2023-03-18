@@ -134,25 +134,30 @@ class UserController {
             })
         }
     }
-  async deleteUser(req, res) {
-    try{
-      const id = (req.params.id)
-      await db.query('delete from student where id = $1', [id])
-      res.status(201).json({
-        message:"успешно удално"
-      })
-    } catch (err){
-      if(err.code === '23503'){
-        res.status(503).json({
-          message: "этот ученик состоит в курсе"
-        })
-      } else {
-        res.status(500).json({
-          message: "ошибка сервера"
-        })
-      }
+    async deleteUser(req, res) {
+        try {
+            const id = req.params.id;
+
+            await db.query('delete from student_courses where student_id = $1', [id]);
+            await db.query('delete from grades where student_id = $1', [id]);
+            await db.query('delete from message_con where sender = $1 or receives = $1', [id]);
+            await db.query('delete from student where id = $1', [id]);
+
+            res.status(201).json({
+                message: "успешно удалено"
+            });
+        } catch (err) {
+            if (err.code === '23503') {
+                res.status(400).json({
+                    message: "этот ученик состоит в курсе"
+                });
+            } else {
+                res.status(500).json({
+                    message: "ошибка сервера: " + err.message
+                });
+            }
+        }
     }
-  }
 }
 
 export default new UserController()
